@@ -23,14 +23,16 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,db)=>{
     //     return console.log("Unable to fetch the documents!",err);
     // });
     
-    db.collection("Users").find({
-        name : 'Siddharth'
-    })
-    .count().then((count)=>{
-    console.log(`Todos Count: ${count}`);
-    //console.log(JSON.stringify(count,undefined,2));
-}, (err)=>{
-    return console.log("Unable to fetch the documents!",err);
-});    
+    //     db.collection("Users").find({
+    //         name : 'Siddharth'
+    //     })
+    //     .count().then((count)=>{
+    //     console.log(`Todos Count: ${count}`);
+    //     //console.log(JSON.stringify(count,undefined,2));
+    // }, (err)=>{
+    //     return console.log("Unable to fetch the documents!",err);
+    // });    
+
+
     db.close();
 });
