@@ -1,21 +1,19 @@
 const {ObjectID} = require('mongodb');
-
 var express = require('express');
 var bodyParser = require('body-parser');
 
 var {Todo} = require('./models/todos-models.js');
 var {Users} = require('./models/users-models.js');
-
 var {mongoose} = require('./db/mongoose.js');
 
 var app = express();
-
+var port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.post('/todos',(req,res)=>{
   var newTodo = new Todo({
     text : req.body.text
-  });
+  }); 
 
   newTodo.save().then((doc)=>{
     res.send(doc);
@@ -50,12 +48,11 @@ if(!ObjectID.isValid(id)){
   console.log(JSON.stringify(todo,undefined,2));  
  }).catch((e)=>{
     res.status(400).send();
-   
  });
 
 });
 
-app.listen(3000,()=>{
-  console.log("Server started at port 3000");
+app.listen(port,()=>{
+  console.log(`Server started at port ${port}`);
   
 });
