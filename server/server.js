@@ -1,6 +1,7 @@
+const _ = require('lodash');
 const { ObjectID } = require("mongodb");
-var express = require("express");
-var bodyParser = require("body-parser");
+const express = require("express");
+const bodyParser = require("body-parser");
 
 var { Todo } = require("./models/todos-models.js");
 var { Users } = require("./models/users-models.js");
@@ -77,6 +78,35 @@ app.delete('/todos/:id',(req,res)=>{
    });
 });
 
+app.patch('/todos/:id',(req,res)=>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['text','completed']);
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send("Unable to UPDATE item!")
+  }
+
+  if(_.isBoolean(body.completed) && body.completed){
+    body.completedAt = new Date().getTime();
+    //body.completedAt = Math.round((new Date()).getTime() / 1000);
+    
+  }
+  else{
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(id, {$set : body}, {new : true})
+  .then((result)=>{
+    if(!result){
+      return res.status(400).send();
+    }
+    res.send({result});
+  }).catch((e)=>{
+    console.log(`Couldnt update the item ${e}`);
+    res.status(400).send();
+  });
+});
+    
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
