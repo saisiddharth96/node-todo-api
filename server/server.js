@@ -3,9 +3,10 @@ const { ObjectID } = require("mongodb");
 const express = require("express");
 const bodyParser = require("body-parser");
 
-var { Todo } = require("./models/todos-models.js");
-var { Users } = require("./models/users-models.js");
+
 var { mongoose } = require("./db/mongoose.js");
+var { Todo } = require("./models/todos-models.js");
+var {User} = require("./models/users-models.js");
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -105,6 +106,19 @@ app.patch('/todos/:id',(req,res)=>{
     console.log(`Couldnt update the item ${e}`);
     res.status(400).send();
   });
+});
+
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  })
 });
     
 app.listen(port, () => {
