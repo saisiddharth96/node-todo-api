@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 var { mongoose } = require("./db/mongoose.js");
 var { Todo } = require("./models/todos-models.js");
 var {User} = require("./models/users-models.js");
+var {authenticate} = require('./middleware/authneticate.js');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -121,6 +122,11 @@ app.post('/users', (req, res) => {
   })
 });
     
+
+app.get('/users/me',authenticate, (req,res)=>{
+  res.send(req.user);
+});
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
