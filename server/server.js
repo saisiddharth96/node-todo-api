@@ -139,6 +139,14 @@ app.post('/users/login', (req,res)=>{
   });
 });
 
+app.delete('/users/me/token',authenticate, (req,res)=>{
+  req.user.removeToken(req.token).then(()=>{
+    res.status(200).send("User DELETE successful!");
+  }, ()=>{
+    res.status(400).send("Unable to delete the user");
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
